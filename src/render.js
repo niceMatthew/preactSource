@@ -17,6 +17,7 @@ export function render(vnode, parentDom, replaceNode) {
 	// We abuse the `replaceNode` parameter in `hydrate()` to signal if we are in
 	// hydration mode or not by passing the `hydrate` function instead of a DOM
 	// element..
+	// 使用 replaceNode 参数来标记是否在hydration模式或者判断传入的是否是hydrate函数而不是DOM元素
 	let isHydrating = typeof replaceNode === 'function';
 
 	// To be able to support calling `render()` multiple times on the same
@@ -24,6 +25,7 @@ export function render(vnode, parentDom, replaceNode) {
 	// this by assigning a new `_children` property to DOM nodes which points
 	// to the last rendered tree. By default this property is not present, which
 	// means that we are mounting a new tree for the first time.
+	// 为了可以在同一个DOM节点上多次调用render()，我们需要包含对前一个树的引用。通过在DOM节点中赋值一个对上一次渲染完的树的引用
 	let oldVNode = isHydrating
 		? null
 		: (replaceNode && replaceNode._children) || parentDom._children;
@@ -34,11 +36,12 @@ export function render(vnode, parentDom, replaceNode) {
 	)._children = createElement(Fragment, null, [vnode]);
 
 	// List of effects that need to be called after diffing.
+	// diff完需要调用的副作用队列
 	let commitQueue = [];
 	diff(
 		parentDom,
 		// Determine the new vnode tree and store it on the DOM element on
-		// our custom `_children` property.
+		// our custom `_children` property.de
 		vnode,
 		oldVNode || EMPTY_OBJ,
 		EMPTY_OBJ,

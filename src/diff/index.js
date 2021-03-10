@@ -41,6 +41,7 @@ export function diff(
 	if (newVNode.constructor !== undefined) return null;
 
 	// If the previous diff bailed out, resume creating/hydrating.
+	// 如果前一次diff过期， 重启creating/hydrating
 	if (oldVNode._hydrating != null) {
 		isHydrating = oldVNode._hydrating;
 		oldDom = newVNode._dom = oldVNode._dom;
@@ -67,11 +68,12 @@ export function diff(
 				: globalContext;
 
 			// Get component and set it to `c`
+			// 获取组件，并且将它设置c
 			if (oldVNode._component) {
 				c = newVNode._component = oldVNode._component;
 				clearProcessingException = c._processingException = c._pendingError;
 			} else {
-				// Instantiate the new component
+				// Instantiate the new component  // 初始化新组件
 				if ('prototype' in newType && newType.prototype.render) {
 					// @ts-ignore The check above verifies that newType is suppose to be constructed
 					newVNode._component = c = new newType(newProps, componentContext); // eslint-disable-line new-cap
@@ -315,6 +317,8 @@ function diffElementNodes(
 			// if newVNode matches an element in excessDomChildren or the `dom`
 			// argument matches an element in excessDomChildren, remove it from
 			// excessDomChildren so it isn't later removed in diffChildren
+			// 如果newVNode在excessDomChildren中的元素，或者dom参数匹配到在excessDomChildren中的元素，
+			// 就在excessDomChildren中移除他，
 			if (
 				child &&
 				(child === dom ||

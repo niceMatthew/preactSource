@@ -298,12 +298,16 @@ function placeChild(
 		// Only Fragments or components that return Fragment like VNodes will
 		// have a non-undefined _nextDom. Continue the diff from the sibling
 		// of last DOM child of this child VNode
+		// 只有当Fragments或者components返回像VNode是一样的Fragment,才会有一个未定义的_nextDom.
+		// 继续在child VNode中的最后的DOM节点的兄弟节点进行diff
 		nextDom = childVNode._nextDom;
 
 		// Eagerly cleanup _nextDom. We don't need to persist the value because
 		// it is only used by `diffChildren` to determine where to resume the diff after
 		// diffing Components and Fragments. Once we store it the nextDOM local var, we
 		// can clean up the property
+		// 清空_nextDom的值。我们不需要再维护这个值，因为它只被`diffChildren`用来确认diffing Components和Fragments之后
+		// 从哪里开始diff.一旦我们存储了nextDom的本地变量，我们就要清空这个属性
 		childVNode._nextDom = undefined;
 	} else if (
 		oldVNode == null ||
@@ -320,10 +324,12 @@ function placeChild(
 				(sibDom = sibDom.nextSibling) && j < oldChildren.length;
 				j += 2
 			) {
+				// 当sibDom和newDom相同时，跳出循环
 				if (sibDom == newDom) {
 					break outer;
 				}
 			}
+			// 在oldDom前insert newDom
 			parentDom.insertBefore(newDom, oldDom);
 			nextDom = oldDom;
 		}
@@ -332,6 +338,8 @@ function placeChild(
 	// If we have pre-calculated the nextDOM node, use it. Else calculate it now
 	// Strictly check for `undefined` here cuz `null` is a valid value of `nextDom`.
 	// See more detail in create-element.js:createVNode
+	// 如果我们已经有了提前计算过的nextDom节点，就是用它。否则开始对他进行计算
+	// 严格检查`undefined`值因为`null`对`nextDom`节点是个有效值
 	if (nextDom !== undefined) {
 		oldDom = nextDom;
 	} else {
